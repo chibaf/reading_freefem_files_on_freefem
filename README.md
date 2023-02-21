@@ -11,6 +11,8 @@ reading_freefem_files_on_freefem
 
 # read solution with FreeFEM++
 
+<img width="612" alt="Screen Shot 2023-02-22 at 6 27 26" src="https://user-images.githubusercontent.com/1296728/220462393-97c953e3-27b1-45b9-bec7-a2647e8fd3d3.png">
+
 ## ref
 
 ttksweb - *.sol の読み込み https://sites.google.com/site/ttksweb/home/numerical/freefem/solnodumirumi
