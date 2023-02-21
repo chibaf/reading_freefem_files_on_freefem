@@ -9,3 +9,5 @@ string s;
     file >> u[][i] ;
   }
 }
+
+plot(u,fill=true,value=true,ps="solution1.eps");
