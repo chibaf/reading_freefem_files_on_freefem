@@ -1,0 +1,2 @@
+mesh Omega=readmesh("wwg.msh");
+plot(Omega);
