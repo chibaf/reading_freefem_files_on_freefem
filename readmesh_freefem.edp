@@ -1,2 +1,2 @@
-mesh Omega=readmesh("wwg.msh");
-plot(Omega);
+mesh Omega=readmesh("mesh.msh");
+plot(Omega,ps="mesh.eps");
