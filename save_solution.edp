@@ -1,0 +1,28 @@
+load "medit"
+
+real rad=1.0;
+int n1;
+func f=-10*sin(x*y);
+func g=0;
+n1=64;
+
+//   define borders
+border a(t=0,2*pi){x=rad*(1-0.5*sin(2*t))*cos(t);y=rad*(1-0.25*cos(3*t))*sin(t);label=1;};
+
+//   define domain and mesh
+mesh Omega=buildmesh(a(n1));
+// output mesh data as a file
+savemesh(Omega,"./Omega.msh");
+//plot(Omega,ps="./Omega.eps");
+
+//generate fem space
+fespace Vh(Omega,P1);
+Vh u,v;
+
+//define and solve problem
+solve pde(u,v)=
+  int2d(Omega)(dx(u)*dx(v)+dy(u)*dy(v)+u*v)+on(a,u=g)-int2d(Omega)(f*v);
+
+plot(Omega,u,wait=true,fill=true,value=true,ps="solution1.eps");
+
+savesol("solution1.sol",Omega,u);
