@@ -1,3 +1,5 @@
+load "medit"
+
 //Parameters
 real uMax = 10.;
 
@@ -32,6 +34,8 @@ int nnL = max(2., L*nn);
 int nnD = max(2., D*nn);
 
 mesh Th=buildmesh(l0(nn)+l1(nn)+a1(nn)+l2(nn)+l3(nn)+l4(nn)+a2(nn)+l5(nn)+c0(-nn));
+
+savemesh(Th,"NS_Th.msh");
 
 //Fespace
 fespace Uh(Th, [P2, P2]);
@@ -78,6 +82,7 @@ for (int i = 0; i < nbiter; i++) {
 	NS;
 
 	//Plot
-	plot(p, cmm="Pressure - i="+i,fill=true);
 //	plot([ux, uy], cmm="Velocity - i="+i);
 }
+plot(p, cmm="Pressure",fill=true);
+savesol("NS_Th.sol",Th,ux,uy,p);
