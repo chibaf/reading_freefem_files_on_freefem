@@ -87,3 +87,4 @@ plot([ux,uy], cmm="Velocity");
 // plot(p, cmm="Pressure",fill=true);
 //savesol("NS_p.sol",Th,p);
 savesol("NS_u.sol",Th,ux,uy);
+//savesol("NS_uy.sol",Th,uy);
