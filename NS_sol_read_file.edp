@@ -1,0 +1,18 @@
+mesh NSTh=readmesh("NS_Th.msh");
+fespace Uh(NSTh, [P2, P2]);
+Uh [ux, uy];
+
+fespace Ph(NSTh, P1);
+Ph p;
+Ph q;
+
+string s;
+{
+  ifstream file("NS_Th.sol");
+  for(int i=0; i < 8; i++) {getline(file,s); cout << "[sol]" << s << endl;}
+  for (int i=0; i < NSTh.nv; i++) {
+    file >> ux[][i] >> uy[][i] >> p[][i];
+  }
+}
+//plot([ux, uy], cmm="Velocity");
+plot(p,fill=true);
