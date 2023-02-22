@@ -15,4 +15,4 @@ string s;
   }
 }
 //plot([ux,uy]);
-plot([u1,u2],value=1);
+plot([u1,u2],value=1,ps="NS.eps");
