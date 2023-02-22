@@ -1,0 +1,18 @@
+mesh NSTh=readmesh("NS_Th.msh");
+fespace Uh(NSTh,P2);
+Uh u1,u2;
+
+fespace Ph(NSTh, P1);
+Ph p;
+//Ph q;
+
+string s;
+{
+  ifstream filep("NS_u.sol");
+  for(int i=0; i < 8; i++) {getline(filep,s); cout << "[sol]" << s << endl;}
+  for (int i=0; i < NSTh.nv; i++) {
+    filep >> u1[][i] >> ", " >> u2[][i];
+  }
+}
+//plot([ux,uy]);
+plot([u1,u2],value=1);
