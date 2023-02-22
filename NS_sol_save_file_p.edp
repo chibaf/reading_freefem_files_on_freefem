@@ -1,0 +1,88 @@
+load "medit"
+
+//Parameters
+real uMax = 10.;
+
+real Rho = 1.;
+real Mu = 1.;
+
+func fx = 0.;
+func fy = 0.;
+
+real T = 1.;
+real dt = 1.e-2;
+
+//Mesh
+int nn = 10;	//Mesh quality
+real L = 3.;	//Pipe length
+real D = 1.;	//Pipe height
+int Wall = 1;	//Pipe wall label
+int Inlet = 2;	//Pipe inlet label
+int Outlet = 3;	//Pipe outlet label
+
+border l0(t=-1.,1.){x=10.;y=t;label=Inlet;};
+border l1(t=10.,2.5){x=t;y=1;label=Wall;};
+border a1(t=0.,pi){x=2.5*cos(t);y=2.5*sin(t)+1.;label=Wall;};
+border l2(t=-2.5,-10.){x=t;y=1.;label=Wall;};
+border l3(t=1.,-1.){x=-10.;y=t;label=Outlet;};
+border l4(t=-10.,-2.5){x=t;y=-1;label=Wall;};
+border a2(t=-pi,0.){x=2.5*cos(t);y=2.5*sin(t)-1.;label=Wall;};
+border l5(t=2.5,10.){x=t;y=-1;label=Wall;};
+border c0(t=0,2.*pi){x=1.5*cos(t);y=1.5*sin(t);label=Wall;};
+
+int nnL = max(2., L*nn);
+int nnD = max(2., D*nn);
+
+mesh Th=buildmesh(l0(nn)+l1(nn)+a1(nn)+l2(nn)+l3(nn)+l4(nn)+a2(nn)+l5(nn)+c0(-nn));
+
+savemesh(Th,"NS_Th.msh");
+
+//Fespace
+fespace Uh(Th, [P2, P2]);
+Uh [ux, uy];
+Uh [upx, upy];
+Uh [vx, vy];
+
+fespace Ph(Th, P1);
+Ph p;
+Ph q;
+
+//Macro
+macro grad(u) [dx(u), dy(u)] //
+macro Grad(U) [grad(U#x), grad(U#y)]//
+macro div(ux, uy) (dx(ux) + dy(uy)) //
+macro Div(U) div(U#x, U#y) //
+
+//Function
+func uIn = uMax * (1.-(y-D/2.)^2/(D/2.)^2);
+
+//Problem
+problem NS ([ux, uy, p],[vx, vy, q])
+	= int2d(Th)(
+		  (Rho/dt) * [ux, uy]' * [vx, vy]
+		+ Mu * (Grad(u) : Grad(v))
+		- p * Div(v)
+		- Div(u) * q
+	)
+	- int2d(Th)(
+		  (Rho/dt) * [convect([upx, upy], -dt, upx), convect([upx, upy], -dt, upy)]' * [vx, vy]
+		+ [fx, fy]' * [vx, vy]
+	)
+	+ on(Inlet, ux=uIn, uy=0.)
+	+ on(Wall, ux=0., uy=0.)
+	;
+
+// Time loop
+int nbiter = T / dt;
+for (int i = 0; i < nbiter; i++) {
+	// Update
+	[upx, upy] = [ux, uy];
+
+	// Solve
+	NS;
+
+}
+plot(p,cmm="pressure",fill=1);
+// plot(p, cmm="Pressure",fill=true);
+//savesol("NS_p.sol",Th,p);
+savesol("NS_p.sol",Th,p);
